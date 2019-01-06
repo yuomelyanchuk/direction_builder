@@ -1,0 +1,7 @@
+worker_name;worker_type
+wine;check
+message1;message
+cheese;check
+reco-wine;call web services
+reco-cheese;call web services
+message2;message

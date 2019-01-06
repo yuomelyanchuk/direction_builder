@@ -1,0 +1,27 @@
+{
+    "name": "wine",
+    "host": "localhost",
+    "port": "5672",
+    "type": "check purchase",
+    "listen_queue": [
+        "input"
+    ],
+    "yes_section": {
+        "send_message": [
+            "chees"
+        ],
+        "message": "wine;section true"
+    },
+    "no_section": {
+        "send_message": [
+            "reco-wine"
+        ],
+        "message": "wine;section false"
+    },
+    "always_section": {
+        "send_message": [
+            "message1"
+        ],
+        "message": "wine;section always"
+    }
+}

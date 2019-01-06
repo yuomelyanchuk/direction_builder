@@ -1,0 +1,10 @@
+from;to;task_result;message
+input;wine;always;
+wine;message1;always;always_
+wine;cheese;yes;yes_
+wine;reco-wine;no;no_
+reco-wine;message2;yes;yes_
+cheese;reco-cheese;no;no_
+cheese;message2;yes;yes_
+reco-cheese;message2;yes;yes_
+wine;message2;yes;ggg

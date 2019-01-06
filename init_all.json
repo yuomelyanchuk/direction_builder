@@ -1,0 +1,90 @@
+{
+    "wine": {
+        "name": "wine",
+        "type": "check",
+        "listen_queue": [
+            "input"
+        ],
+        "always_section": {
+            "send_message": [
+                "message1"
+            ],
+            "message": "always_"
+        },
+        "yes_section": {
+            "send_message": [
+                "cheese",
+                "message2"
+            ],
+            "message": "ggg"
+        },
+        "no_section": {
+            "send_message": [
+                "reco-wine"
+            ],
+            "message": "no_"
+        }
+    },
+    "message1": {
+        "name": "message1",
+        "type": "message",
+        "listen_queue": [
+            "wine_message1"
+        ]
+    },
+    "cheese": {
+        "name": "cheese",
+        "type": "check",
+        "listen_queue": [
+            "wine_cheese"
+        ],
+        "no_section": {
+            "send_message": [
+                "reco-cheese"
+            ],
+            "message": "no_"
+        },
+        "yes_section": {
+            "send_message": [
+                "message2"
+            ],
+            "message": "yes_"
+        }
+    },
+    "reco-wine": {
+        "name": "reco-wine",
+        "type": "call web services",
+        "listen_queue": [
+            "wine_reco-wine"
+        ],
+        "yes_section": {
+            "send_message": [
+                "message2"
+            ],
+            "message": "yes_"
+        }
+    },
+    "reco-cheese": {
+        "name": "reco-cheese",
+        "type": "call web services",
+        "listen_queue": [
+            "cheese_reco-cheese"
+        ],
+        "yes_section": {
+            "send_message": [
+                "message2"
+            ],
+            "message": "yes_"
+        }
+    },
+    "message2": {
+        "name": "message2",
+        "type": "message",
+        "listen_queue": [
+            "reco-wine_message2",
+            "cheese_message2",
+            "reco-cheese_message2",
+            "wine_message2"
+        ]
+    }
+}
