@@ -1,0 +1,26 @@
+{
+    "name": "wine",
+    "type": "check",
+    "listen_queue": [
+        "input"
+    ],
+    "always_section": {
+        "send_message": [
+            "message1"
+        ],
+        "message": "always_"
+    },
+    "yes_section": {
+        "send_message": [
+            "cheese",
+            "message2"
+        ],
+        "message": "ggg"
+    },
+    "no_section": {
+        "send_message": [
+            "reco-wine"
+        ],
+        "message": "no_"
+    }
+}

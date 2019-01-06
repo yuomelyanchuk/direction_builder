@@ -94,8 +94,8 @@ class ProjectGenerator:
 
         return self
 
-
     '''перенести в докер файл'''
+
     def generate_project_runner(self):
         python = 'python3'
         if os.name in 'nt':
@@ -104,14 +104,16 @@ class ProjectGenerator:
             fp.write("import os\n")
             for vertices in self.vertices:
                 fp.write(str.format("os.system('{0} {1}')\n", python,
-                                         os.path.join('.', vertices.get('worker_name'),
-                                                      vertices.get('worker_name') + '.py')))
+                                    os.path.join('.', vertices.get('worker_name'),
+                                                 vertices.get('worker_name') + '.py')))
 
     def generate_workers(self):
         for vertices in self.vertices:
             workers_directory = os.path.join(self.directory, self.code_dir_name, vertices.get('worker_name'))
             shutil.copy(os.path.join('..', 'workers', 'GenericWorker.py'),
                         os.path.join(workers_directory, vertices.get('worker_name') + '.py'))
+        shutil.copy(os.path.join('..', 'web_service', 'input.py'),
+                    os.path.join(self.directory, self.code_dir_name, 'input', 'input.py'))
         return self
 
     def read_vertices(self):
@@ -132,4 +134,4 @@ if __name__ == "__main__":
     project \
         .generate_project_structure() \
         .generate_workers_ini_file() \
-        .generate_workers().generate_project_runner()
+        .generate_workers()

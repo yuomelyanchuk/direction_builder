@@ -6,7 +6,7 @@ class GenericWorker:
     '''Generic worker class'''
 
     def __init__(self):
-        with open('../init.json', 'r') as fp:
+        with open('init.json', 'r') as fp:
             self.init = json.load(fp)
 
         self.worker_name = self.init.get('name', '')
