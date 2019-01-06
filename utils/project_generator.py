@@ -2,6 +2,7 @@ import json
 import os
 import csv
 import socket
+import shutil
 
 
 class ProjectGenerator:
@@ -17,7 +18,7 @@ class ProjectGenerator:
         self.read_edge()
         self.directory = os.path.join('..', self.project_name)
         self.queue_names = set(['input', 'errors'])
-        self.code_dir_name='code'
+        self.code_dir_name = 'code'
 
     def check_port(self, port):
         s = socket.socket()
@@ -38,18 +39,17 @@ class ProjectGenerator:
                 break
 
     def generate_project_structure(self):
-        code_dir_name =  self.code_dir_name
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
-            os.makedirs(os.path.join(self.directory, code_dir_name))
+            os.makedirs(os.path.join(self.directory, self.code_dir_name))
 
         for vertices in self.vertices:
-            workers_directory = os.path.join(self.directory, code_dir_name, vertices.get('worker_name'))
+            workers_directory = os.path.join(self.directory, self.code_dir_name, vertices.get('worker_name'))
             if not os.path.exists(workers_directory):
                 os.makedirs(workers_directory)
 
         for er_input in ['errors', 'input']:
-            workers_directory = os.path.join(self.directory, code_dir_name, er_input)
+            workers_directory = os.path.join(self.directory, self.code_dir_name, er_input)
             if not os.path.exists(workers_directory):
                 os.makedirs(workers_directory)
 
@@ -88,13 +88,31 @@ class ProjectGenerator:
             init_files.update({'errors': {'name': 'errors', 'type': 'errors', 'listen_queue': ['errors']}})
             init_files.update({'input': {'name': 'input', 'type': 'input', 'listen_queue': ['errors']}})
 
-            for worker , ini in init_files.items():
-                with open(os.path.join(self.directory,self.code_dir_name,worker,'init.json'), 'w') as fp:
-                    json.dump(ini, fp,  indent=4)
+            for worker, ini in init_files.items():
+                with open(os.path.join(self.directory, self.code_dir_name, worker, 'init.json'), 'w') as fp:
+                    json.dump(ini, fp, indent=4)
 
         return self
 
-    # OrderedDict([('from', 'input'), ('to', 'wine'), ('task_result', 'always'), ('message', '')])
+
+    '''перенести в докер файл'''
+    def generate_project_runner(self):
+        python = 'python3'
+        if os.name in 'nt':
+            python = 'python'
+        with open(os.path.join(self.directory, self.code_dir_name, 'runner.py'), 'w') as fp:
+            fp.write("import os\n")
+            for vertices in self.vertices:
+                fp.write(str.format("os.system('{0} {1}')\n", python,
+                                         os.path.join('.', vertices.get('worker_name'),
+                                                      vertices.get('worker_name') + '.py')))
+
+    def generate_workers(self):
+        for vertices in self.vertices:
+            workers_directory = os.path.join(self.directory, self.code_dir_name, vertices.get('worker_name'))
+            shutil.copy(os.path.join('..', 'workers', 'GenericWorker.py'),
+                        os.path.join(workers_directory, vertices.get('worker_name') + '.py'))
+        return self
 
     def read_vertices(self):
         with open(self.vertices_path) as infile:
@@ -113,4 +131,5 @@ if __name__ == "__main__":
     project = ProjectGenerator(project_name='generator_test')
     project \
         .generate_project_structure() \
-        .generate_workers_ini_file()
+        .generate_workers_ini_file() \
+        .generate_workers().generate_project_runner()

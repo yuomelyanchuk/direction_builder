@@ -36,6 +36,10 @@ with open('init.json', 'r') as fp:
     init = json.load(fp)
 
 
+
+import os
+os.name
+
 init.listen_queue
 
 
